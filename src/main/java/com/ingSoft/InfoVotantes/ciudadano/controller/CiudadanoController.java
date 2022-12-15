@@ -2,7 +2,6 @@ package com.ingSoft.InfoVotantes.ciudadano.controller;
 
 import com.ingSoft.InfoVotantes.ciudadano.dto.CiudadanoDTO;
 import com.ingSoft.InfoVotantes.ciudadano.service.CiudadanoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +10,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/ciudadano")
 public class CiudadanoController {
-    @Autowired
-    private CiudadanoService ciudadanoService;
+    private final CiudadanoService ciudadanoService;
+
+    public CiudadanoController(CiudadanoService ciudadanoService) {
+        this.ciudadanoService = ciudadanoService;
+    }
 
     @GetMapping
     public List<CiudadanoDTO> getAll() {

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface CandidatoRepository extends MongoRepository<Candidato, String> {
     Optional<Candidato> findById(String id);
+    Optional<Candidato> findByCedCiudadano(Integer cedula);
     void deleteById(String id);
-    Candidato getCandidatoById(int id);
+    void deleteByCedCiudadano(Integer cedula);
 }

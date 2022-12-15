@@ -7,7 +7,7 @@ public class CandidatoDTO {
     private String id;
     private String nombre;
     private String eslogan;
-    private String patidoPolitico;
+    private String partidoPolitico;
     private String propuesta;
-    private String ced_ciudadano;
+    private Integer cedCiudadano;
 }

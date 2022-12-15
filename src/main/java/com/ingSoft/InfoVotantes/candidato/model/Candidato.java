@@ -17,8 +17,8 @@ public class Candidato {
 
     private String nombre;
     private String eslogan;
-    private String patidoPolitico;
+    private String partidoPolitico;
     private String propuesta;
     @DBRef
-    private Ciudadano ced_ciudadano;
+    private Ciudadano cedCiudadano;
 }

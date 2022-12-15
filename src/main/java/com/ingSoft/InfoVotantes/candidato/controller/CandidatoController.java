@@ -1,8 +1,8 @@
 package com.ingSoft.InfoVotantes.candidato.controller;
 
 import com.ingSoft.InfoVotantes.candidato.dto.CandidatoDTO;
+import com.ingSoft.InfoVotantes.candidato.model.Candidato;
 import com.ingSoft.InfoVotantes.candidato.service.CandidatoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +11,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/candidato")
 public class CandidatoController {
-    @Autowired
-    private CandidatoService candidatoService;
+    private final CandidatoService candidatoService;
+
+    public CandidatoController(CandidatoService candidatoService) {
+        this.candidatoService = candidatoService;
+    }
 
     @GetMapping
-    public List<CandidatoDTO> getAll() {
+    public List<Candidato> getAll() {
         return candidatoService.getAll();
     }
 
@@ -25,7 +28,7 @@ public class CandidatoController {
     }
 
     @GetMapping("/detail/{id}")
-    public CandidatoDTO readCandidato(@PathVariable int id) {
+    public Object readCandidato(@PathVariable String id) {
         return candidatoService.readCandidato(id);
     }
 
@@ -35,7 +38,7 @@ public class CandidatoController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
-        candidatoService.delete(id);
+    public Object delete(@PathVariable String id) {
+        return candidatoService.delete(id);
     }
 }
