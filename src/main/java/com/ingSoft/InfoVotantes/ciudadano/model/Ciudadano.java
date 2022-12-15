@@ -21,5 +21,8 @@ public class Ciudadano {
     private String pais;
     private String lugarvotacion;
     private String departamentoresidencia;
+    private String correo;
+    private String pass;
+    private Long phone;
     private Boolean voto;
 }

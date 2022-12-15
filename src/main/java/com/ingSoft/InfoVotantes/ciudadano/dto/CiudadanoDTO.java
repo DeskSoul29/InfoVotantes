@@ -15,5 +15,8 @@ public class CiudadanoDTO {
     private String departamentoresidencia;
     private String municipioresidencia;
     private String lugarvotacion;
+    private String correo;
+    private String pass;
+    private Long phone;
     private Boolean voto;
 }

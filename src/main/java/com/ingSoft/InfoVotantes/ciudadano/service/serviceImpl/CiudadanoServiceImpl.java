@@ -10,8 +10,12 @@ import com.ingSoft.InfoVotantes.ciudadano.service.CiudadanoService;
 import lombok.var;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +25,15 @@ public class CiudadanoServiceImpl implements CiudadanoService {
     private final CiudadanoRepository ciudadanoRepository;
     private final CiudadanoConverter ciudadanoConverter;
     private final CandidatoRepository candidatoRepository;
+    private final JavaMailSender mailSender;
+    final PasswordEncoder passwordEncoder;
 
-    public CiudadanoServiceImpl(CiudadanoRepository ciudadanoRepository, CiudadanoConverter ciudadanoConverter, CandidatoRepository candidatoRepository) {
+    public CiudadanoServiceImpl(CiudadanoRepository ciudadanoRepository, CiudadanoConverter ciudadanoConverter, CandidatoRepository candidatoRepository, JavaMailSender mailSender, PasswordEncoder passwordEncoder) {
         this.ciudadanoRepository = ciudadanoRepository;
         this.ciudadanoConverter = ciudadanoConverter;
         this.candidatoRepository = candidatoRepository;
+        this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -59,16 +67,27 @@ public class CiudadanoServiceImpl implements CiudadanoService {
     public Object update(int id, CiudadanoDTO ciudadanoDto) {
         Optional<Ciudadano> personaCiudadano = ciudadanoRepository.findById(id);
 
-        //var cliente = ciudadanoRepository.getCiudadanoById(id);
         if(personaCiudadano.isPresent()){
             Ciudadano ciudadano = personaCiudadano.get();
             ciudadano.setNombres(ciudadanoDto.getNombres());
             ciudadano.setApellidos(ciudadanoDto.getApellidos());
+            ciudadano.setMunicipionacimiento(ciudadanoDto.getMunicipionacimiento());
             ciudadano.setMunicipioresidencia(ciudadanoDto.getMunicipioresidencia());
             ciudadano.setFechanacimiento(ciudadanoDto.getFechanacimiento());
             ciudadano.setPais(ciudadanoDto.getPais());
             ciudadano.setLugarvotacion(ciudadanoDto.getLugarvotacion());
             ciudadano.setDepartamentoresidencia(ciudadanoDto.getDepartamentoresidencia());
+            ciudadano.setCorreo(ciudadanoDto.getCorreo());
+            ciudadano.setPhone(ciudadanoDto.getPhone());
+
+            if(ciudadanoDto.getPass() == null){
+                String pass = generateRandomPassword(10);
+                send(ciudadanoDto.getCorreo(), "Registro Exitoso a InfoVotantes", ciudadanoDto.getNombres(), pass);
+                ciudadano.setPass(passwordEncoder.encode(pass));
+            }else{
+                ciudadano.setPass(passwordEncoder.encode(ciudadanoDto.getPass()));
+            }
+
             return ciudadanoRepository.save(ciudadano);
         }
         return new ResponseEntity<>("Cant find any user with the given id", HttpStatus.UNAUTHORIZED);
@@ -87,6 +106,30 @@ public class CiudadanoServiceImpl implements CiudadanoService {
             return new ResponseEntity<>("User Delete", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>("Cant find any user with the given id", HttpStatus.UNAUTHORIZED);
+    }
+
+    public void send(String to, String subject, String name, String pass) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("mashdez2022@gmail.com");
+        message.setTo(to);
+        message.setSubject("¡Bienvenido a InfoVotantes!");
+        message.setText("¡Hola "+ name +"!, nos complace informarte que has sido registrado en el sistema de InfoVotantes, las credenciales para ingresar son: \n Correo: "+ to +" \n Contraseña: "+ pass);
+        mailSender.send(message);
+    }
+
+    public static String generateRandomPassword(int len){
+        final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < len; i++)
+        {
+            int randomIndex = random.nextInt(chars.length());
+            sb.append(chars.charAt(randomIndex));
+        }
+
+        return sb.toString();
     }
 
 }
