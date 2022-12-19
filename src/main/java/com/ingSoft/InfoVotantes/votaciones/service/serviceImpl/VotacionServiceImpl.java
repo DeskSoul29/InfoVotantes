@@ -42,7 +42,11 @@ public class VotacionServiceImpl implements VotacionService {
                 if(!personaCiudadano.get().getVoto()){
                     var voto = votacionConverter.dtoToModel(votacionDto);
                     voto.setCandidatoId(personaCandidato.get());
+                    voto.setNombreCand(personaCandidato.get().getNombre());
                     voto.setDate(new Date());
+                    voto.setPais((personaCiudadano.get().getPais()));
+                    voto.setLugarvotacion((personaCiudadano.get().getLugarvotacion()));
+                    voto.setDepartamento((personaCiudadano.get().getDepartamentoresidencia()));
 
                     Ciudadano ciudadano = personaCiudadano.get();
                     ciudadano.setVoto(true);

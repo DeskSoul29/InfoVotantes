@@ -17,5 +17,9 @@ public class Votacion {
     private String id;
     @DBRef
     private Candidato candidatoId;
+    private String nombreCand;
+    private String pais;
+    private String lugarvotacion;
+    private String departamento;
     private Date date;
 }

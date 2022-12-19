@@ -33,9 +33,12 @@ public class CandidatoServiceImpl implements CandidatoService {
         if(personaCiudadano.isPresent()){
             Optional<Candidato> personaCandidato = candidatoRepository.findByCedCiudadano(candidatoDto.getCedCiudadano());
             if(!personaCandidato.isPresent()){
-                var candidato = candidatoConverter.dtoToModel(candidatoDto);
-                candidato.setCedCiudadano(personaCiudadano.get());
-                return candidatoRepository.save(candidato);
+                if(personaCiudadano.get().getCorreo() != null){
+                    var candidato = candidatoConverter.dtoToModel(candidatoDto);
+                    candidato.setCedCiudadano(personaCiudadano.get());
+                    return candidatoRepository.save(candidato);
+                }
+                return new ResponseEntity<>("The Ciudadano does not have mail", HttpStatus.UNAUTHORIZED);
             }
             return new ResponseEntity<>("The Candidato is registered", HttpStatus.UNAUTHORIZED);
         }

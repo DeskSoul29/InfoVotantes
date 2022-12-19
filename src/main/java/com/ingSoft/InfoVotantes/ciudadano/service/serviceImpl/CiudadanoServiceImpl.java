@@ -42,6 +42,7 @@ public class CiudadanoServiceImpl implements CiudadanoService {
         if(!personaCiudadano.isPresent()){
             var ciudadano = ciudadanoConverter.dtoToModel(ciudadanoDto);
             ciudadano.setVoto(false);
+            ciudadano.setRoles("ROLE_USER");
             return ciudadanoConverter.modelToDto(ciudadanoRepository.save(ciudadano));
         }
         return new ResponseEntity<>("The User is registered", HttpStatus.UNAUTHORIZED);
@@ -79,15 +80,14 @@ public class CiudadanoServiceImpl implements CiudadanoService {
             ciudadano.setDepartamentoresidencia(ciudadanoDto.getDepartamentoresidencia());
             ciudadano.setCorreo(ciudadanoDto.getCorreo());
             ciudadano.setPhone(ciudadanoDto.getPhone());
-
             if(ciudadanoDto.getPass() == null){
                 String pass = generateRandomPassword(10);
-                send(ciudadanoDto.getCorreo(), "Registro Exitoso a InfoVotantes", ciudadanoDto.getNombres(), pass);
+                send(ciudadanoDto.getCorreo(), ciudadanoDto.getNombres(), pass);
                 ciudadano.setPass(passwordEncoder.encode(pass));
             }else{
                 ciudadano.setPass(passwordEncoder.encode(ciudadanoDto.getPass()));
             }
-
+            ciudadano.setRoles("ROLE_USER");
             return ciudadanoRepository.save(ciudadano);
         }
         return new ResponseEntity<>("Cant find any user with the given id", HttpStatus.UNAUTHORIZED);
@@ -108,9 +108,9 @@ public class CiudadanoServiceImpl implements CiudadanoService {
         return new ResponseEntity<>("Cant find any user with the given id", HttpStatus.UNAUTHORIZED);
     }
 
-    public void send(String to, String subject, String name, String pass) {
+    public void send(String to, String name, String pass) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("mashdez2022@gmail.com");
+        message.setFrom("jhannavarro2001@gmail.com");
         message.setTo(to);
         message.setSubject("¡Bienvenido a InfoVotantes!");
         message.setText("¡Hola "+ name +"!, nos complace informarte que has sido registrado en el sistema de InfoVotantes, las credenciales para ingresar son: \n Correo: "+ to +" \n Contraseña: "+ pass);

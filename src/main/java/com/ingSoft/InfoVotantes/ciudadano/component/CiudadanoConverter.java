@@ -19,8 +19,7 @@ public class CiudadanoConverter {
 
     public List<CiudadanoDTO> listModelToDto(List<Ciudadano> ciudadanos){
         List<CiudadanoDTO> ciudadanoDto= new ArrayList<>();
-        for (Ciudadano ciudadano: ciudadanos
-        ) {
+        for (Ciudadano ciudadano: ciudadanos) {
             ciudadanoDto.add(modelToDto(ciudadano));
         }
         return ciudadanoDto;

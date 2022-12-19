@@ -19,4 +19,5 @@ public class CiudadanoDTO {
     private String pass;
     private Long phone;
     private Boolean voto;
+    private String roles;
 }

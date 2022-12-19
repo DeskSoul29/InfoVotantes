@@ -10,5 +10,8 @@ public interface CiudadanoRepository extends MongoRepository<Ciudadano, Integer>
 
     Optional<Ciudadano> findById(int id);
 
+    Optional<Ciudadano> findByCorreo(String correo);
+
     Ciudadano getCiudadanoById(int id);
+    boolean existsByCorreo(String correo);
 }
